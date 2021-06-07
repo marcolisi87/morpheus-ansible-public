@@ -1,0 +1,44 @@
+---
+# Wildfly installation
+- name: Install the latest version of openjdk
+  yum:
+    name: java-1.8.0-openjdk
+    state: latest
+
+- name: WildFly | Ensure WildFly group exists
+  group:
+    name: "wildfly"
+
+- name: WildFly | Ensure WildFly user exists
+  user:
+    name: "wildfly"
+    group: "wildfly"
+    shell: "/sbin/nologin"
+    createhome: no
+    home: "/opt/wildfly"
+    state: present
+
+- name: Download WildFly
+  get_url:
+    url: "{{ wildfly_installer_path }}/{{ wildfly_installer }}"
+    dest: /tmp
+
+- name: WildFly setup
+  shell: "{{ item }}"
+  with_items:
+    - tar xf /tmp/{{ wildfly_installer }} -C /opt/
+    - rm -f /tmp/{{ wildfly_installer }}
+    - mv /opt/{{ wildfly_version }} /opt/wildfly
+    - mkdir /etc/wildfly
+    - cp /opt/wildfly/docs/contrib/scripts/systemd/wildfly.conf /etc/wildfly/
+    - cp /opt/wildfly/docs/contrib/scripts/systemd/launch.sh /opt/wildfly/bin/
+    - sh -c 'chmod +x /opt/wildfly/bin/*.sh'
+    - cp /opt/wildfly/docs/contrib/scripts/systemd/wildfly.service /etc/systemd/system/
+    - chown -R wildfly:wildfly /opt/wildfly
+
+- name: WildFly | Manage service
+  systemd:
+    name: wildfly
+    state: started
+    enabled: true
+    daemon_reload: yes
