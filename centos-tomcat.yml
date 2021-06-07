@@ -1,0 +1,15 @@
+---
+- name: This sets up an tomcat webapp
+  hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+  - name: Install tomcat packages 
+    yum:
+      name: tomcat
+      state: present
+  - name: ensure tomcat is running
+    service:
+      name: tomcat 
+      state: started

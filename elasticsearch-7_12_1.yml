@@ -1,0 +1,11 @@
+---
+- hosts: all
+  vars:
+    download_url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.12.1-amd64.deb 
+    package_name: elasticsearch-7.12.1-amd64.deb
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+
+  roles:
+    - elasticsearch-7_12_1

@@ -1,0 +1,24 @@
+---
+
+- name: Add ppa Repository
+  ansible.builtin.apt_repository:
+    repo: ppa:ondrej/php
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+  become_user: root
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: install perl pwgen ssl-cert
+  apt: pkg={{item}} install_recommends=no state=latest
+  with_items:
+    - perl
+    - pwgen
+    - ssl-cert
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Install php7.4
+  apt: pkg=php7.4 state=latest
+  become_user: root
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'

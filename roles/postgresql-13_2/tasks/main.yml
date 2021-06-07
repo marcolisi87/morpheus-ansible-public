@@ -1,0 +1,26 @@
+---
+
+- name: install git wget curl vim locales ca-certificates
+  apt: pkg={{item}} install_recommends=no state=latest
+  with_items:
+    - git
+    - wget
+    - curl
+    - perl
+    - vim
+    - locales
+    - ca-certificates
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: create the file repository configuration
+  shell: echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+  ignore_errors: yes
+
+- name: import the repository signing key
+  shell: wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  ignore_errors: yes
+
+- name: install postgres
+  shell: apt update && apt install -y postgresql
+  ignore_errors: yes
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'

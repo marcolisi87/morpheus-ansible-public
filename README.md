@@ -1,2 +1,1 @@
-# morpheus-ansible-public
-Ansible Repo for Morpheus
+# morpheus-ansible

@@ -1,0 +1,7 @@
+---
+- name: Local OS User
+  hosts: all
+  tasks:
+  - name: Local User Playbook
+    include_role:
+      name: LocalUser

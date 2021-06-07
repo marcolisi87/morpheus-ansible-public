@@ -1,0 +1,5 @@
+---
+mysql_repo: "https://dev.mysql.com/get/mysql80-community-release-el8-1.noarch.rpm"
+mysql_packages: "mysql-community-server"
+mysql_root_password: "Password01!"
+nexus_mysql_repo: http://10.60.30.99/repository/NexusMysql8/

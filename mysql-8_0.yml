@@ -1,0 +1,10 @@
+---
+- hosts: all
+  vars:
+    mysql_version: 8.0
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+
+  roles:
+    - mysql-8_0
