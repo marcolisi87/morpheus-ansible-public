@@ -8,9 +8,10 @@
     
 - name: Add Mysql8 repository
   yum_repository:
-    name: NexusMysql8
+    name: Mysql8
     description: Mysql8 YUM repo
-    baseurl: "{{ nexus_mysql_repo }}"
+#    baseurl: "{{ nexus_mysql_repo }}"
+    baseurl: "{{ mysql_repo }}"
     gpgcheck: no
     
 - name: Disable mysql module
