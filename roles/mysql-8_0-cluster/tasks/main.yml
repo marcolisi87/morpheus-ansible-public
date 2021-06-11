@@ -1,0 +1,13 @@
+---
+# This playbook will install mysql Cluster on Oracle Linux 8.4 
+
+- name: add mysql group
+  shell: groupadd -r mysql && useradd -r -g mysql mysql
+  ignore_errors: yes
+
+- name: myslq usermod
+  shell: usermod -u 1001 mysql
+  ignore_errors: yes
+
+- name: Download binaries
+  command: wget --continue -P /var/tmp http://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-8.0.25-1.el8.x86_64.rpm-bundle.tar
