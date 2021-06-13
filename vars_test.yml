@@ -7,17 +7,20 @@
         msg: "{{ item }}"
       loop: 
         - "{{ hostvars[inventory_hostname]['morpheus']['morpheus']['apiAccessToken'] | to_nice_yaml }}"
+        ignore_errors: yes
         
     - debug:
         msg: "{{ item }}"
       loop: 
         - "{{ hostvars[inventory_hostname]['morpheus'] | to_nice_yaml }}"
+        ignore_errors: yes
 
 #The below will print the first vm name of an instance with multiple vm's
     - debug:
         msg: "{{ item }}"
       loop:
         - "{{ morpheus['instance']['containers'][0]['name'] }}"
+        ignore_errors: yes
 
 # Iteration for items in array
     - debug:
@@ -26,6 +29,7 @@
         msg: "First node in instance is {{ items.0.name }} with IP {{ items.0.internalIP }}"
       loop:
         - "{{ query('subelements'), containers, 'containers' }}"
+        ignore_errors: yes
       
 # Iteration for items in array
     - debug:
@@ -33,3 +37,4 @@
         msg: "{{ morpheus }}"
       loop:
         - "{{ query('subelements'), morpheus, 'morpheus' }}"
+        ignore_errors: yes
