@@ -2,19 +2,19 @@
 # This playbook will install mysql Cluster on Oracle Linux 8.4 
 
 - name: add mysql group
-  ansible.builtin.group:
+  group:
     name: mysql
     state: present
 
 - name: add mysql user
-  ansible.builtin.user:
+  user:
     name: mysql
     comment: Mysql User
     group: mysql
 
 # On all nodes
 - name: Stop firewalld services 
-  ansible.builtin.service:
+  service:
     name: firewalld
     state: stopped
     enabled: no
@@ -25,10 +25,7 @@
 
 # On data nodes 
 - name: Download the rpm on data node if oracle linux 8
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm
-
-- name: Install the rpm
-  command: rpm -Uvh mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm
+  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm
 
 # On sql nodes
 - name: install libaio
@@ -71,4 +68,59 @@
 - name: Download ndbClient Library
   command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-ndbclient-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-ndbclient-8.0.25-1.el8.x86_64.rpm
 
-# start of ndbd on data node gave an connection error. Have disabled selinux on data and mgmt node and restarted them. Network cannot be DHCP as upon reboot it gets a new ip. Need to disable ipv6 on all machines
+# Setup the hosts file on all nodes
+- name: Generate /etc/hosts file
+  template:
+    src: etc/hosts.j2
+    dest: /etc/hosts
+
+# Disable ipv6 on the mgmt server
+- name: Disable ipv6 on mgmt server
+  command: sysctl -w net.ipv6.conf.all.disable_ipv6=1
+
+# On Data nodes update my.cnf
+- name: Generate /etc/my.cnf file
+  template:
+    src=etc/data.mycnf.template
+    dest=/etc/my.cnf
+
+# On SQL node update my.cnf
+- name: Generate /etc/my.cnf file
+  template:
+    src: etc/sql.mycnf.template
+    dest: /etc/my.cnf
+
+# On mgmt server create dir and update config.ini
+- name: Create dir and set the permission
+  file:
+    path: /var/lib/mysql-cluster
+    state: directory
+    recurse: yes
+
+- name: Create config.ini
+  template:
+    src: config.ini.template
+    dest: /var/lib/mysql-cluster/config.ini
+    
+# Start the services on mgmt server
+- name: Start inital config of ndb_mgmt
+  command: ndb_mgmd --initial -f /var/lib/mysql-cluster/config.ini --ndb-nodeid=1 --ndb-connectstring="nodeid=1;host={{ansible_default_ipv4["address"]}}:1186"
+
+# Start the service on data nodes
+- name: start ndbd
+  command: ndbd
+
+# Start the service on sql node
+- name: Mysql stop
+  service:
+    name: mysqld
+    state: stopped
+
+- name: Mysqld start
+  service:
+    name: mysqld
+    state: started
+
+
+# verify if datanodes are connected
+# verify is sql node is connected

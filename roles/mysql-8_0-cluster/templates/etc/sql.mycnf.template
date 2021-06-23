@@ -1,0 +1,12 @@
+[mysqld]
+ndbcluster
+ndb-connectstring={{ groups['mysql_cluster_mgm'] }}:1186
+
+disable_log_bin
+
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
