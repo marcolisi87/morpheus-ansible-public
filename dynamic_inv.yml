@@ -1,3 +1,4 @@
-- hosts: morphtest
+- hosts: all
   tasks:
     - ping:
+  when: inventory_hostname == ubuntu
