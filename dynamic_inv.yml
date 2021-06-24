@@ -1,4 +1,7 @@
-- hosts: all
+---
+- name: This sets up an mysql master server
+  hosts: all
   tasks:
-    - ping:
-  when: inventory_hostname == ubuntu
+  - name: Install mysql packages 
+    ping:
+    when: inventory_hostname == groups['morphtest']
