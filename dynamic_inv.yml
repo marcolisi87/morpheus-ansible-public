@@ -1,0 +1,15 @@
+---
+- name: This is dynamic inventory test
+  hosts: all
+  tasks:
+  - name: Ping servers which are in group morphtest
+    ping:
+    when: inventory_hostname in groups['morphtest']
+#    delegate_to: "{{ item }}"
+#    with_items: "{{ groups['morphtest'] }}"
+  
+  - name: Create dir on servers in group app
+    file:
+      path: /tmp/testdir
+      state: directory
+    when: inventory_hostname in groups['app']
