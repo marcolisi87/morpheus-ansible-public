@@ -4,7 +4,7 @@
   tasks:
   - name: Ping servers which are in group morphtest
     ping:
-    when: inventory_hostname in groups['morphtest']
+    when: inventory_hostname in groups['sql']
     runonce: true
 #    delegate_to: "{{ item }}"
 #    with_items: "{{ groups['morphtest'] }}"
@@ -13,5 +13,11 @@
     file:
       path: /tmp/testdir
       state: directory
-    when: inventory_hostname in groups['app']
+    when: inventory_hostname in groups['data']
     runonce: true
+
+  - name: show all the hosts matching the pattern, i.e. all but the group www
+  debug:
+    msg: "{{ item }}"
+  with_inventory_hostnames:
+    - all
