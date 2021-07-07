@@ -1,0 +1,10 @@
+---
+- hosts: all
+  vars:
+    es_version: 7.13.2
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+
+  roles:
+    - elasticsearch-7_13_2
