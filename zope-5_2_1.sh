@@ -1,5 +1,8 @@
 #!/bin/bash
-cd tmp
+apt install -y python3-dev
+apt install -y python3-venv
+apt install -y python3-pip
+cd /tmp
 wget https://pypi.org/packages/source/Z/Zope/Zope-5.2.1.tar.gz
 tar xfvz Zope-5.2.1.tar.gz
 cd Zope-5.2.1
