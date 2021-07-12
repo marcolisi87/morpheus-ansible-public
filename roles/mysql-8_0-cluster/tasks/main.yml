@@ -32,7 +32,6 @@
     url: https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm
     dest: /var/tmp
   when: inventory_hostname in lookup ('inventory_hostnames', 'data')
-  #command: "wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm"
 
 - name: Install the package  
   yum:
@@ -42,7 +41,7 @@
   when: inventory_hostname in lookup ('inventory_hostnames', 'data')
 
 # On sql nodes
-- name: install libaio
+- name: Install libaio and net tools on SQL and MGMT nodes
   dnf: 
     name: "{{ item }}"
     state: present
@@ -51,51 +50,99 @@
     - net-tools
   when: inventory_hostname in lookup ('inventory_hostnames', 'sql:mgmt')
 
-- name: download client plugins
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-client-plugins-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-client-plugins-8.0.25-1.el8.x86_64.rpm
-  when: inventory_hostname in lookup ('inventory_hostnames', 'sql')
+- name: download client plugins on SQL nodes
+  get_url:
+    url: https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-client-plugins-8.0.25-1.el8.x86_64.rpm
+    dest: /var/tmp
+  when: inventory_hostname in lookup ('inventory_hostnames', 'sql:mgmt')
 
-- name: Download common 
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-common-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-common-8.0.25-1.el8.x86_64.rpm
-  when: inventory_hostname in lookup ('inventory_hostnames', 'sql')
+- name: Install client plugins on SQL nodes
+  yum:
+    name: /var/tmp/mysql-cluster-community-client-plugins-8.0.25-1.el8.x86_64.rpm
+    disable_gpg_check: yes
+    state: present
+  when: inventory_hostname in lookup ('inventory_hostnames', 'sql:mgmt')
 
-- name: Download client libs
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-libs-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-libs-8.0.25-1.el8.x86_64.rpm
-  when: inventory_hostname in lookup ('inventory_hostnames', 'sql')
+- name: Download common on SQL nodes
+  get_url:
+    url: https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-common-8.0.25-1.el8.x86_64.rpm
+    dest: /var/tmp
+  when: inventory_hostname in lookup ('inventory_hostnames', 'sql:mgmt')
 
-- name: Download client
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-client-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-client-8.0.25-1.el8.x86_64.rpm
-  when: inventory_hostname in lookup ('inventory_hostnames', 'sql')
+- name: Install common on SQL nodes
+  yum:
+    name: /var/tmp/mysql-cluster-community-common-8.0.25-1.el8.x86_64.rpm
+    disable_gpg_check: yes
+    state: present
+  when: inventory_hostname in lookup ('inventory_hostnames', 'sql:mgmt')
 
-- name: Download the sql node rpm
+- name: Download client libs on SQL nodes
+  get_url:
+    url: https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-libs-8.0.25-1.el8.x86_64.rpm
+    dest: /var/tmp
+  when: inventory_hostname in lookup ('inventory_hostnames', 'sql:mgmt')
+
+- name: Install client libs on SQL nodes
+  yum:
+    name: rpm -Uvh /var/tmp/mysql-cluster-community-libs-8.0.25-1.el8.x86_64.rpm
+    disable_gpg_check: yes
+    state: present
+  when: inventory_hostname in lookup ('inventory_hostnames', 'sql:mgmt')
+
+- name: Download client on SQL nodes
+  get_url:
+    url: https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-client-8.0.25-1.el8.x86_64.rpm
+    dest: /var/tmp
+  when: inventory_hostname in lookup ('inventory_hostnames', 'sql:mgmt')
+
+- name: Install client on SQL nodes
+  yum:
+    name: /var/tmp/mysql-cluster-community-server-8.0.25-1.el8.x86_64.rpm
+    disable_gpg_check: yes
+    state: present
+  when: inventory_hostname in lookup ('inventory_hostnames', 'sql:mgmt')
+
+- name: Download the sql node rpm on SQL Node
+  get_url:
+    url: https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-server-8.0.25-1.el8.x86_64.rpm
+    dest: /var/tmp
   command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-server-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-server-8.0.25-1.el8.x86_64.rpm
   when: inventory_hostname in lookup ('inventory_hostnames', 'sql')
 
+- name: Install the SQL rpm on SQL node
+  yum:
+    name: /var/tmp/mysql-cluster-community-server-8.0.25-1.el8.x86_64.rpm
+    disable_gpg_check: yes
+    state: present
+  when: inventory_hostname in lookup ('inventory_hostnames', 'sql')
+
 # On Management Node
-- name: Download and install management server rpm
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-management-server-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-management-server-8.0.25-1.el8.x86_64.rpm
+- name: Download management server rpm
+  get_url:
+    url: https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-management-server-8.0.25-1.el8.x86_64.rpm
+    dest: /var/tmp
   when: inventory_hostname in lookup ('inventory_hostnames', 'mgmt')
 
-- name: download client plugins
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-client-plugins-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-client-plugins-8.0.25-1.el8.x86_64.rpm
-  when: inventory_hostname in lookup ('inventory_hostnames', 'mgmt')
-
-- name: Download common 
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-common-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-common-8.0.25-1.el8.x86_64.rpm
-  when: inventory_hostname in lookup ('inventory_hostnames', 'mgmt')
-
-- name: Download client libs
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-libs-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-libs-8.0.25-1.el8.x86_64.rpm
-  when: inventory_hostname in lookup ('inventory_hostnames', 'mgmt')
-
-- name: Download client
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-client-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-client-8.0.25-1.el8.x86_64.rpm
+- name: Install Management server rpm
+  yum:
+    name: /var/tmp/mysql-cluster-community-management-server-8.0.25-1.el8.x86_64.rpm
+    disable_gpg_check: yes
+    state: present
   when: inventory_hostname in lookup ('inventory_hostnames', 'mgmt')
 
 - name: Download ndbClient Library
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-ndbclient-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-ndbclient-8.0.25-1.el8.x86_64.rpm
+  get_url:
+    url: https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-ndbclient-8.0.25-1.el8.x86_64.rpm
+    dest: /var/tmp
   when: inventory_hostname in lookup ('inventory_hostnames', 'mgmt')
 
+- name: Install ndbClient Library
+  yum:
+    name: /var/tmp/mysql-cluster-community-ndbclient-8.0.25-1.el8.x86_64.rpm
+    disable_gpg_check: yes
+    state: present
+  when: inventory_hostname in lookup ('inventory_hostnames', 'mgmt')
+  
 # Setup the hosts file on all nodes
 - name: Generate /etc/hosts file
   template:
