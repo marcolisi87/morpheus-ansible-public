@@ -106,7 +106,6 @@
   get_url:
     url: https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-server-8.0.25-1.el8.x86_64.rpm
     dest: /var/tmp
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-server-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-server-8.0.25-1.el8.x86_64.rpm
   when: inventory_hostname in lookup ('inventory_hostnames', 'sql')
 
 - name: Install the SQL rpm on SQL node
@@ -142,7 +141,7 @@
     disable_gpg_check: yes
     state: present
   when: inventory_hostname in lookup ('inventory_hostnames', 'mgmt')
-  
+
 # Setup the hosts file on all nodes
 - name: Generate /etc/hosts file
   template:
