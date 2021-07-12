@@ -28,7 +28,16 @@
 
 # On data nodes 
 - name: Download the rpm on data node if oracle linux 8
-  command: wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm
+  get_url:
+    url: https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm
+    dest: /var/tmp
+  when: inventory_hostname in lookup ('inventory_hostnames', 'data')
+  #command: "wget --continue -P /var/tmp https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm && rpm -Uvh /var/tmp/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm"
+
+- name: Install the package  
+  yum:
+    name: /var/tmp/mysql-cluster-community-data-node-8.0.25-1.el8.x86_64.rpm
+    state: present
   when: inventory_hostname in lookup ('inventory_hostnames', 'data')
 
 # On sql nodes
