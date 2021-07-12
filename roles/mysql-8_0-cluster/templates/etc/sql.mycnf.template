@@ -1,6 +1,6 @@
 [mysqld]
 ndbcluster
-ndb-connectstring={{ groups['mysql_cluster_mgm'] }}:1186
+ndb-connectstring={{ groups['mgmt'] }}:1186
 
 disable_log_bin
 
