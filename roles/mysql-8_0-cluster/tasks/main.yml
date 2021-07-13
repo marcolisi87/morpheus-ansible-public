@@ -168,7 +168,13 @@
     dest=/etc/my.cnf
   when: inventory_hostname in lookup ('inventory_hostnames', 'data')
 
-
+# create log dirs on data nodes
+- name: Create log dirs on data nodes
+  file:
+    path: /usr/local/mysql/data/
+    state: directory
+    recurse: yes
+  when: inventory_hostname in lookup ('inventory_hostnames', 'data')
 
 # On mgmt server create dir and update config.ini
 - name: Create dir and set the permission
