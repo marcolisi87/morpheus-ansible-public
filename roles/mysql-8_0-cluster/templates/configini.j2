@@ -12,14 +12,14 @@ NodeId=1
 
 [ndbd]
 
-HostName={%for host in groups['data']%}{{hostvars[host][0].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}
+HostName={%for host in groups['data'][0]%}{{hostvars[host].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}
 
 NodeId=2                        
 DataDir=/usr/local/mysql/data   
 
 [ndbd]
 
-HostName={%for host in groups['data']%}{{hostvars[host][1].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}
+HostName={%for host in groups['data'][1]%}{{hostvars[host].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}
 
 NodeId=3                       
 DataDir=/usr/local/mysql/data  
