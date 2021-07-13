@@ -160,7 +160,7 @@
     src: etc/sql.mycnf.template
     dest: /etc/my.cnf
   when: inventory_hostname in lookup ('inventory_hostnames', 'sql')
-  
+
 # On Data nodes update my.cnf
 - name: Generate /etc/my.cnf file
   template:
