@@ -12,14 +12,14 @@ NodeId=1
 
 [ndbd]
 
-HostName={%for host in groups['data'] if host[0]%}{{hostvars[host].ansible_eth0.ipv4.address}}{% endfor %}
+HostName=hostvars[groups[data][0]].ansible_eth0.ipv4.address
 
 NodeId=2                        
 DataDir=/usr/local/mysql/data   
 
 [ndbd]
 
-HostName={%for host in groups['data'] if host[1]%}{{hostvars[host].ansible_eth0.ipv4.address}}{% endfor %}
+HostName=hostvars[groups[data][1]].ansible_eth0.ipv4.addres
 
 NodeId=3                       
 DataDir=/usr/local/mysql/data  
