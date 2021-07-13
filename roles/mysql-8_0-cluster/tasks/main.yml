@@ -157,14 +157,14 @@
 # On SQL node update my.cnf
 - name: Generate /etc/my.cnf file
   template:
-    src: etc/sql.mycnf.template
+    src: etc/sqlmycnf.j2
     dest: /etc/my.cnf
   when: inventory_hostname in lookup ('inventory_hostnames', 'sql')
 
 # On Data nodes update my.cnf
 - name: Generate /etc/my.cnf file
   template:
-    src=etc/data.mycnf.template
+    src=etc/datamycnf.j2
     dest=/etc/my.cnf
   when: inventory_hostname in lookup ('inventory_hostnames', 'data')
 
@@ -180,7 +180,7 @@
 
 - name: Create config.ini
   template:
-    src: config.ini.template
+    src: configini.j2
     dest: /var/lib/mysql-cluster/config.ini
   when: inventory_hostname in lookup ('inventory_hostnames', 'mgmt')
 
