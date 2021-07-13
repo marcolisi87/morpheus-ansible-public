@@ -5,26 +5,27 @@ DataMemory=98M    # How much memory to allocate for data storage
 
 [ndb_mgmd]
 # Management process options:
-hostname={%for host in groups['mgmt']%}{{hostvars[host].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}          # Hostname or IP address of management node
+hostname={%for host in groups['mgmt']%}{{hostvars[host].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}
+
 DataDir=/var/lib/mysql-cluster  # Directory for management node log files
 NodeId=1
 
 [ndbd]
 # Options for data node "A":
-                                # (one [ndbd] section per data node)
-HostName={%for host in groups['data'][0]%}{{hostvars[host].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}:1186         # Hostname or IP address
+HostName={%for host in groups['data'][0]%}{{hostvars[host].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}
+
 NodeId=2                        # Node ID for this data node
 DataDir=/usr/local/mysql/data   # Directory for this data node's data files
 
 [ndbd]
 # Options for data node "B":
-HostName={%for host in groups['data'][1]%}{{hostvars[host].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}:1186          # Hostname or IP address
+HostName={%for host in groups['data'][1]%}{{hostvars[host].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}
+
 NodeId=3                        # Node ID for this data node
 DataDir=/usr/local/mysql/data   # Directory for this data node's data files
 
 [mysqld]
 # SQL node options:
-HostName={%for host in groups['sql']%}{{hostvars[host].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}:1186         # Hostname or IP address
-NodeId=4                                # (additional mysqld connections can be
-                                # specified for this node for various
-                                # purposes such as running ndb_restore)
+HostName={%for host in groups['sql']%}{{hostvars[host].ansible_eth0.ipv4.address}}{% if not loop.last %},{% endif %}{% endfor %}    
+
+NodeId=4                               
