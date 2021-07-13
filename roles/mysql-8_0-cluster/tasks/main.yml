@@ -154,6 +154,13 @@
   command: sysctl -w net.ipv6.conf.all.disable_ipv6=1
   when: inventory_hostname in lookup ('inventory_hostnames', 'mgmt')
 
+# On SQL node update my.cnf
+- name: Generate /etc/my.cnf file
+  template:
+    src: etc/sql.mycnf.template
+    dest: /etc/my.cnf
+  when: inventory_hostname in lookup ('inventory_hostnames', 'sql')
+  
 # On Data nodes update my.cnf
 - name: Generate /etc/my.cnf file
   template:
@@ -161,12 +168,7 @@
     dest=/etc/my.cnf
   when: inventory_hostname in lookup ('inventory_hostnames', 'data')
 
-# On SQL node update my.cnf
-- name: Generate /etc/my.cnf file
-  template:
-    src: etc/sql.mycnf.template
-    dest: /etc/my.cnf
-  when: inventory_hostname in lookup ('inventory_hostnames', 'sql')
+
 
 # On mgmt server create dir and update config.ini
 - name: Create dir and set the permission
