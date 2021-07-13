@@ -5,26 +5,26 @@ DataMemory=98M    # How much memory to allocate for data storage
 
 [ndb_mgmd]
 # Management process options:
-hostname=10.60.30.152          # Hostname or IP address of management node
+hostname="{% set IP_ARR=[] %}{% for host in groups['mgmt'] %}{% if IP_ARR.insert(loop.index,hostvars[host]['ansible_ssh_host']) %}{% endif %}{% endfor %}"          # Hostname or IP address of management node
 DataDir=/var/lib/mysql-cluster  # Directory for management node log files
 NodeId=1
 
 [ndbd]
 # Options for data node "A":
                                 # (one [ndbd] section per data node)
-HostName=10.60.30.243          # Hostname or IP address
+HostName="{% set IP_ARR=[] %}{% for host in groups['data'][0] %}{% if IP_ARR.insert(loop.index,hostvars[host]['ansible_ssh_host']) %}{% endif %}{% endfor %}"         # Hostname or IP address
 NodeId=2                        # Node ID for this data node
 DataDir=/usr/local/mysql/data   # Directory for this data node's data files
 
 [ndbd]
 # Options for data node "B":
-HostName=10.60.30.156          # Hostname or IP address
+HostName="{% set IP_ARR=[] %}{% for host in groups['data'][1] %}{% if IP_ARR.insert(loop.index,hostvars[host]['ansible_ssh_host']) %}{% endif %}{% endfor %}"          # Hostname or IP address
 NodeId=3                        # Node ID for this data node
 DataDir=/usr/local/mysql/data   # Directory for this data node's data files
 
 [mysqld]
 # SQL node options:
-HostName=10.60.30.244          # Hostname or IP address
+HostName="{% set IP_ARR=[] %}{% for host in groups['sql'] %}{% if IP_ARR.insert(loop.index,hostvars[host]['ansible_ssh_host']) %}{% endif %}{% endfor %}"         # Hostname or IP address
 NodeId=4                                # (additional mysqld connections can be
                                 # specified for this node for various
                                 # purposes such as running ndb_restore)
