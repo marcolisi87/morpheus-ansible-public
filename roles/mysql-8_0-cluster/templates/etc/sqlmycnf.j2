@@ -1,7 +1,7 @@
 [mysqld]
 ndbcluster
 ndb-connectstring={%for host in groups['mgmt']%}"{{hostvars[host].ansible_eth0.ipv4.address}}"{% if not loop.last %},{% endif %}{% endfor %}:1186
-
+ndb-connectstring={%for host in groups['mgmt']%}"{{hostvars[host].ansible_eth0.ipv4.address|join(':1186')}}"{% if not loop.last %},{% endif %}{% endfor %}
 disable_log_bin
 
 datadir=/var/lib/mysql
