@@ -190,6 +190,11 @@
   command: ndb_mgmd --initial -f /var/lib/mysql-cluster/config.ini --ndb-nodeid=1 --ndb-connectstring="nodeid=1;host={{hostvars[groups['mgmt'][0]].ansible_eth0.ipv4.address }}:1186"
   when: inventory_hostname in lookup ('inventory_hostnames', 'mgmt')
 
+# Sleep for 20secs
+- name: Sleep for 20secs
+  pause:
+    minutes: 1
+
 # Start the service on data nodes
 - name: start ndbd
   command: ndbd
