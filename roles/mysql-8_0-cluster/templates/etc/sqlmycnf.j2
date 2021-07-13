@@ -1,8 +1,6 @@
 [mysqld]
 ndbcluster
-#ndb-connectstring=:1186
-#ndb-connectstring="{% set IP_ARR=[] %}{% for host in groups['mgmt'] %}{% if IP_ARR.insert(loop.index,hostvars[host]['ansible_ssh_host']) %}{% endif %}{% endfor %}{{IP_ARR|join(':1186,')}"
-#ndb-connectstring={%for host in groups['mgmt']%}"{{hostvars[host].ansible_eth0.ipv4.address}}"{% if not loop.last %},{% endif %}{% endfor %}
+ndb-connectstring={%for host in groups['mgmt']%}"{{hostvars[host].ansible_eth0.ipv4.address}}"{% if not loop.last %},{% endif %}{% endfor %}
 disable_log_bin
 
 datadir=/var/lib/mysql
