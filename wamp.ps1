@@ -46,3 +46,4 @@ Add-Content C:\Apache24\conf\httpd.conf 'AddType application/x-httpd-php .html .
 Add-Content C:\Apache24\conf\httpd.conf 'AddHandler application/x-httpd-php .php'
 (gc -path C:\Apache24\conf\httpd.conf) -replace '(DirectoryIndex index.html)','$1 index.php' |sc C:\Apache24\conf\httpd.conf
 Add-Content C:\Apache24\conf\httpd.conf 'PHPiniDir "C:/php"'
+restart-Service -Name Apache2.4
