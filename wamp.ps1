@@ -1,7 +1,5 @@
-
 $VC_redist = 'https://aka.ms/vs/16/release/VC_redist.x64.exe'
 $apache = 'https://www.apachehaus.com/downloads/httpd-2.4.48-o111k-x64-vs16.zip'
-#$MYSQL = 'https://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-community-8.0.25.0.msi'
 $MYSQL_URL = 'https://dev.mysql.com/get/Downloads/MySQL-8.0'
 $MYSQL_PKG ='mysql-8.0.25-winx64'
 $MYSQL_visual_studio = 'https://dev.mysql.com/get/Downloads/MySQL-for-VisualStudio/mysql-for-visualstudio-1.2.9.msi'
@@ -20,15 +18,13 @@ Start-Process -wait -FilePath "C:\Apache24\bin\httpd.exe" -ArgumentList "-k star
 
 
 ## MYSQL Community installation
-#wget -Uri $MYSQL -OutFile "C:\mysql-installer-community.msi"
 wget -Uri $Visual_studio -OutFile "C:\visual_studio.exe"
 wget -Uri $MYSQL_visual_studio -OutFile "C:\mysql-for-visualstudio.msi"
 
 Start-Process -wait -FilePath "C:\visual_studio.exe" -ArgumentList "-q"
 Start-Process -wait -FilePath "C:\mysql-for-visualstudio.msi" -ArgumentList "/q"
-#msiexec.exe /q /log install.txt /i c:\mysql-installer-community.msi
 
-wget $MYSQL_URL/$MYSQL_PKG -OutFile c:\mysql.zip
+wget $MYSQL_URL/$MYSQL_PKG.zip -OutFile c:\mysql.zip
 Expand-Archive "c:\mysql.zip" -DestinationPath "c:\"
 Rename-Item C:\$MYSQL_PKG c:\mysql
 
