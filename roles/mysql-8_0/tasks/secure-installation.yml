@@ -82,5 +82,11 @@
     state: absent
   with_items: "{{ mysql_anonymous_hosts.stdout_lines|default([]) }}"
 
+- name: Make sure pymysql is present
+  become: true # needed if the other tasks are not played as root
+  pip:
+    name: pymysql
+    state: present
+
 - name: Remove MySQL test database.
   mysql_db: "name='test' state=absent"
