@@ -13,7 +13,7 @@
 - name: apt prep
 #  shell: apt-get update && apt-get install -y git wget curl vim perl --no-install-recommends && apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys A4A9406876FCBD3C456770C88C718D3B5072E1F5 
   shell: apt-get install -y perl --no-install-recommends && apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys A4A9406876FCBD3C456770C88C718D3B5072E1F5 
-  ignore_errors: no
+  ignore_errors: yes
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: get mysql apt list
