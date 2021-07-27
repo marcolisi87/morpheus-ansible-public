@@ -37,6 +37,9 @@ wget $PHP -OutFile c:\php.zip
 Expand-Archive c:\php.zip -DestinationPath "c:\php"
 Copy-Item "C:\php\php.ini-production" -Destination "c:\php\php.ini"
 Add-Content C:\php\php.ini 'extension_dir = "C:\PHP\ext"'
+Add-Content C:\php\php.ini 'extension = php_mysqli.dll'
+Add-Content C:\php\php.ini 'extension = php_mbstring.dll'
+
 Add-Content C:\Apache24\conf\httpd.conf 'LoadModule php7_module "C:/php/php7apache2_4.dll"'
 Add-Content C:\Apache24\conf\httpd.conf 'AddType application/x-httpd-php .html .htm'
 Add-Content C:\Apache24\conf\httpd.conf 'AddHandler application/x-httpd-php .php'
