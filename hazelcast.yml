@@ -1,0 +1,10 @@
+---
+- hosts: all
+  #  vars:
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+
+  roles:
+    - hazelcast-4
+

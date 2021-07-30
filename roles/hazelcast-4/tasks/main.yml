@@ -1,0 +1,11 @@
+---
+- name: Download key
+  shell: wget -qO - https://repository.hazelcast.com/api/gpg/key/public | sudo apt-key add -
+- name: Add repo
+  shell: echo "deb https://repository.hazelcast.com/debian stable main" | sudo tee -a /etc/apt/sources.list
+- name: Update OS and Install Hazelcast
+  shell: apt update && apt install hazelcast="{{ hazelcast_version }}" -y
+
+- name: Reboot and Wait
+  reboot:
+    test_command: uptime
