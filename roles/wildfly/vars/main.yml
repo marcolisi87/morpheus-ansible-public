@@ -1,5 +1,3 @@
---
 wildfly_version: wildfly-24.0.1.Final
 wildfly_installer: "{{ wildfly_version }}.tar.gz"
 wildfly_installer_path: https://download.jboss.org/wildfly/24.0.1.Final
-
