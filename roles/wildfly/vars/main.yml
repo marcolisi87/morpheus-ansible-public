@@ -1,3 +1,5 @@
-wildfly_version: wildfly-23.0.2.Final
+--
+wildfly_version: wildfly-24.0.1.Final
 wildfly_installer: "{{ wildfly_version }}.tar.gz"
-wildfly_installer_path: http://10.60.30.99/repository/wildfly/
+wildfly_installer_path: https://download.jboss.org/wildfly/24.0.1.Final
+
