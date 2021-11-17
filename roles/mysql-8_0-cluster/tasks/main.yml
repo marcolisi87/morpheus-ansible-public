@@ -25,6 +25,7 @@
 - name: Disable default mysql module
   command: yum module disable mysql -y
   when: inventory_hostname in lookup ('inventory_hostnames', 'data:sql:mgmt')
+  ignore_errors: yes
 
 # On data nodes 
 - name: Download the rpm on data node if oracle linux 8
